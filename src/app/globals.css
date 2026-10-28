@@ -1,16 +1,38 @@
 :root {
-  --bg-primary: #07120e;
-  --bg-secondary: #0d1f18;
-  --bg-card: #122920;
-  --bg-bubble: #173529;
-  --text-primary: #f4f7f5;
-  --text-secondary: #b7c9c1;
-  --text-muted: #8aa399;
-  --accent-gold: #e2be5a;
-  --accent-gold-soft: rgba(226, 190, 90, 0.16);
-  --accent-emerald: #34d399;
-  --border-subtle: #234739;
-  --border-gold: rgba(226, 190, 90, 0.42);
+  /* PurelyAdmin / Comus Design System v2 Color Tokens */
+  --p-cream: #F6F1E8;
+  --p-cream-dark: #EDE8DE;
+  --p-surface: #FFFCFA;
+  --p-green: #3B6D11;
+  --p-green-hover: #27500A;
+  --p-green-light: #EAF3DE;
+  --p-green-border: #C0DD97;
+  --p-green-mid: #639922;
+  --p-terracotta: #C1622F;
+  --p-terracotta-dark: #9C4E24;
+  --p-terracotta-soft: #F3E3D8;
+  --p-text: #2C2C1A;
+  --p-text-muted: #6B6B55;
+  --p-border: #C8C4B0;
+  --p-border-muted: rgba(200, 196, 176, 0.65);
+  --p-shadow: 0 4px 20px rgba(44, 44, 26, 0.04);
+  --p-shadow-elevated: 0 8px 24px rgba(44, 44, 26, 0.08);
+
+  /* Semantic Aliases */
+  --bg-primary: var(--p-cream);
+  --bg-secondary: var(--p-cream-dark);
+  --bg-card: var(--p-surface);
+  --bg-bubble: var(--p-surface);
+  --text-primary: var(--p-text);
+  --text-secondary: #474734;
+  --text-muted: var(--p-text-muted);
+  --accent-gold: var(--p-terracotta);
+  --accent-gold-soft: var(--p-terracotta-soft);
+  --accent-emerald: var(--p-green);
+  --border-subtle: var(--p-border);
+  --border-gold: var(--p-terracotta);
+
+  /* Device Safe Area */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -26,10 +48,9 @@ body {
   width: 100%;
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: var(--bg-primary);
-  background-image: radial-gradient(circle at 50% 0%, #133326 0%, #07120e 70%);
-  color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--p-cream);
+  color: var(--p-text);
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
 }
@@ -40,36 +61,53 @@ body {
   padding-bottom: var(--safe-bottom);
 }
 
+.font-serif {
+  font-family: var(--font-serif), Cormorant Garamond, Georgia, serif;
+}
+
+.font-sans {
+  font-family: var(--font-sans), DM Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 .container {
   width: 100%;
-  max-width: 520px;
+  max-width: 540px;
   margin: 0 auto;
-  padding: 14px;
+  padding: 16px;
   min-height: calc(100vh - var(--safe-top) - var(--safe-bottom));
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
+/* PurelyAdmin Card Standard (Radius 12, 1pt pBorder, Surface, Shadow y4 blur20 %4) */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+  background: var(--p-surface);
+  border: 1px solid var(--p-border);
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 0;
+  overflow-wrap: break-word;
+  box-shadow: var(--p-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 24px;
+  }
+}
+
+/* Dervish Thought Bubble in PurelyAdmin Aesthetic */
+.thought-bubble {
+  position: relative;
+  background: var(--p-surface);
+  border: 1.5px solid var(--p-green-border);
+  border-radius: 16px;
   padding: 18px;
   min-width: 0;
   overflow-wrap: break-word;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-}
-
-.thought-bubble {
-  position: relative;
-  background: linear-gradient(145deg, #1a3c2f 0%, #11281f 100%);
-  border: 1.5px solid var(--border-gold);
-  border-radius: 24px;
-  padding: 20px;
-  min-width: 0;
-  overflow-wrap: break-word;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: var(--p-shadow);
 }
 
 .bubble-trail {
@@ -81,50 +119,101 @@ body {
 }
 
 .bubble-dot-lg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--bg-bubble);
-  border: 1.5px solid var(--border-gold);
+  background: var(--p-green-light);
+  border: 1.5px solid var(--p-green-border);
 }
 
 .bubble-dot-sm {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: var(--bg-bubble);
-  border: 1.5px solid var(--border-gold);
+  background: var(--p-green-light);
+  border: 1.5px solid var(--p-green-border);
 }
 
+/* Inner Heart Whisper: Terracotta Soft Warm Container */
 .whisper-bubble {
-  background: rgba(13, 31, 24, 0.85);
-  border-left: 3px solid var(--accent-gold);
-  border-radius: 0 14px 14px 0;
+  background: var(--p-terracotta-soft);
+  border-left: 3px solid var(--p-terracotta);
+  border-radius: 0 10px 10px 0;
   padding: 12px 14px;
   font-style: italic;
-  color: var(--text-secondary);
+  color: var(--p-text);
   font-size: 13.5px;
   line-height: 1.55;
 }
 
+/* PurelyAdmin Button Standard (Radius 8, min-height 44px, DM Sans Medium, 0.2s ease, active scale 0.98) */
 .touch-btn {
   min-height: 44px;
   min-width: 0;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-family: var(--font-sans), inherit;
+  font-size: 13.5px;
+  font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   user-select: none;
   text-align: center;
 }
 
+.touch-btn:active {
+  transform: scale(0.98);
+}
+
+.touch-btn:focus-visible {
+  outline: none;
+  border-color: var(--p-green);
+  box-shadow: 0 0 0 3px rgba(59, 109, 17, 0.25);
+}
+
+/* Primary Button: Green */
+.btn-primary {
+  background-color: var(--p-green);
+  color: #ffffff;
+  border-color: var(--p-green);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  background-color: var(--p-green-hover);
+  border-color: var(--p-green-hover);
+}
+
+/* Secondary / Ghost Button: Surface with subtle border */
+.btn-secondary {
+  background-color: var(--p-surface);
+  color: var(--p-text);
+  border-color: var(--p-border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--p-cream-dark);
+}
+
+/* Terracotta Accent Button */
+.btn-terracotta {
+  background-color: var(--p-terracotta);
+  color: #ffffff;
+  border-color: var(--p-terracotta);
+  font-weight: 600;
+}
+
+.btn-terracotta:hover {
+  background-color: var(--p-terracotta-dark);
+  border-color: var(--p-terracotta-dark);
+}
+
+/* Step Grid 7 (Nefs Stations & Daily Moments) */
 .step-grid-7 {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -137,80 +226,56 @@ body {
   min-width: 0;
   width: 100%;
   padding: 0;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
+  border-radius: 8px;
+  font-family: var(--font-sans), inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--p-border);
+  background: var(--p-surface);
+  color: var(--p-text-muted);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   user-select: none;
 }
 
+.step-slot-btn:active {
+  transform: scale(0.96);
+}
+
+.step-slot-btn:focus-visible {
+  outline: none;
+  border-color: var(--p-green);
+  box-shadow: 0 0 0 2px rgba(59, 109, 17, 0.25);
+}
+
 .step-slot-btn-active {
-  background: linear-gradient(135deg, #e2be5a, #b88917);
-  border-color: var(--accent-gold);
-  color: #07120e;
-  box-shadow: 0 0 12px rgba(226, 190, 90, 0.3);
-}
-
-.touch-btn:active {
-  transform: scale(0.97);
-  opacity: 0.92;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #e2be5a, #b88917);
-  color: #07120e;
+  background: var(--p-green-light);
+  border-color: var(--p-green);
+  color: var(--p-green);
   font-weight: 700;
+  box-shadow: 0 2px 6px rgba(59, 109, 17, 0.12);
 }
 
-.btn-secondary {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-subtle);
-}
-
-.scene-pill {
-  min-height: 44px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 12.5px;
-  font-weight: 600;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-secondary);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s ease;
-}
-
-.scene-pill-active {
-  background: var(--accent-gold-soft);
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-}
-
+/* Disclosure / Accordion */
 .disclosure-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  background: var(--p-surface);
+  border: 1px solid var(--p-border);
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: var(--p-shadow);
+  transition: border-color 0.2s ease;
 }
 
 .disclosure-item[open] {
-  border-color: var(--border-gold);
+  border-color: var(--p-green-border);
 }
 
 .disclosure-summary {
-  min-height: 52px;
-  padding: 14px 16px;
+  min-height: 48px;
+  padding: 12px 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -218,44 +283,85 @@ body {
   gap: 10px;
   font-weight: 600;
   font-size: 14.5px;
-  color: var(--text-primary);
+  color: var(--p-text);
   list-style: none;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.disclosure-summary:hover {
+  background-color: var(--p-cream-dark);
 }
 
 .disclosure-summary::-webkit-details-marker {
   display: none;
 }
 
+/* Textarea & Input (16px mobilde iOS safari zoom'u önler, PurelyAdmin radius 8, focus ring) */
 .textarea-input {
   width: 100%;
-  min-height: 88px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 12px;
-  color: var(--text-primary);
-  font-family: inherit;
-  font-size: 14px;
+  min-height: 92px;
+  background: var(--p-surface);
+  border: 1px solid var(--p-border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--p-text);
+  font-family: var(--font-sans), inherit;
+  font-size: 16px;
   line-height: 1.5;
   resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.textarea-input:focus-visible,
 .textarea-input:focus {
   outline: none;
-  border-color: var(--accent-gold);
+  border-color: var(--p-green);
+  box-shadow: 0 0 0 3px rgba(59, 109, 17, 0.22);
 }
 
+/* PurelyAdmin Badge (Radius 8, inline-flex, greenLight zemin + green metin, 8x8 dot) */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 999px;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-family: var(--font-sans), inherit;
   font-size: 11.5px;
   font-weight: 600;
-  background: var(--accent-gold-soft);
-  color: var(--accent-gold);
-  border: 1px solid rgba(226, 190, 90, 0.3);
+  letter-spacing: 0.05em;
+  background: var(--p-green-light);
+  color: var(--p-green);
+  border: 1px solid var(--p-green-border);
   max-width: 100%;
   overflow-wrap: break-word;
+}
+
+.badge-terracotta {
+  background: var(--p-terracotta-soft);
+  color: var(--p-terracotta-dark);
+  border: 1px solid rgba(193, 98, 47, 0.3);
+}
+
+.badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background-color: var(--p-green);
+  flex-shrink: 0;
+}
+
+.badge-dot-terracotta {
+  background-color: var(--p-terracotta);
+}
+
+/* Section Label (UPPERCASE, tracking-widest, muted) */
+.section-label {
+  font-family: var(--font-sans), inherit;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--p-text-muted);
 }

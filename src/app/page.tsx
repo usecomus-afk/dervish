@@ -123,13 +123,13 @@ export default function HomePage() {
         setDraftNote(textToSave);
       }
       setIsSaved(true);
-      setSaveFeedback('Kaydedildi');
+      setSaveFeedback('Gönül defterinize kaydedildi');
     }
     setReflections(updated);
     try {
       localStorage.setItem('kalbiselim_reflections_v1', JSON.stringify(updated));
     } catch {
-      setSaveFeedback('Kayıt hatası');
+      setSaveFeedback('Kayıt hatası oluştu');
     }
   };
 
@@ -164,9 +164,13 @@ export default function HomePage() {
   if (!mounted) {
     return (
       <main className="container" aria-busy="true">
-        <section className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>
-          <p style={{ color: 'var(--accent-gold)', fontSize: 15, fontWeight: 600 }}>
-            Kalb-i Selim · Dervişin Tefekkür Dünyası Yükleniyor...
+        <section className="card" style={{ textAlign: 'center', padding: '40px 20px' }}>
+          <div className="badge" style={{ marginBottom: 12 }}>
+            <span className="badge-dot" />
+            <span>Yükleniyor</span>
+          </div>
+          <p className="font-serif" style={{ color: 'var(--p-text)', fontSize: 17, fontWeight: 600 }}>
+            Kalb-i Selim · Dervişin Tefekkür Dünyası Hazırlanıyor...
           </p>
         </section>
       </main>
@@ -178,8 +182,8 @@ export default function HomePage() {
   return (
     <main className="container">
       {/* Header: Dervişin Hâl Aynası */}
-      <header className="card" style={{ padding: '16px', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left' }}>
+      <header className="card" style={{ padding: '18px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div
             style={{
               position: 'relative',
@@ -188,8 +192,8 @@ export default function HomePage() {
               flexShrink: 0,
               borderRadius: '50%',
               overflow: 'hidden',
-              border: '2px solid var(--accent-gold)',
-              boxShadow: '0 0 18px rgba(226, 190, 90, 0.3)'
+              border: '2px solid var(--p-green)',
+              boxShadow: '0 2px 10px rgba(59, 109, 17, 0.18)'
             }}
           >
             <Image
@@ -201,20 +205,39 @@ export default function HomePage() {
             />
           </div>
           <div style={{ minWidth: 0, flex: 1 }}>
-            <span className="badge" style={{ marginBottom: 4 }}>
-              Edep Yâ Hû &middot; Vahdet-i Vücûd
-            </span>
-            <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>
-              Kalb-i Selim &middot; Derviş
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 4 }}>
+              <span className="badge">
+                <span className="badge-dot" />
+                Edep Yâ Hû &middot; Vahdet-i Vücûd
+              </span>
+            </div>
+            <h1
+              className="font-serif"
+              style={{
+                fontSize: 22,
+                fontWeight: 600,
+                color: 'var(--p-text)',
+                lineHeight: 1.25,
+                letterSpacing: '-0.01em'
+              }}
+            >
+              Kalb-i Selim &middot; <span style={{ fontStyle: 'italic', color: 'var(--p-green)' }}>Derviş</span>
             </h1>
-            <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', lineHeight: 1.4, marginTop: 2 }}>
-              Günlük hayatın içinde her varlıkta O&apos;nu gören bir dervişin idrak ve iç sorgulama yolculuğu
+            <p
+              style={{
+                fontSize: 12.5,
+                color: 'var(--p-text-muted)',
+                lineHeight: 1.45,
+                marginTop: 3
+              }}
+            >
+              Günlük hayatın içinde her varlıkta O&apos;nu gören bir dervişin idrak ve tefekkür yolculuğu
             </p>
           </div>
         </div>
       </header>
 
-      {/* Primary Navigation (4 Tabs, >=46px height) */}
+      {/* Primary Navigation (4 Tabs, PurelyAdmin Standard >=44px) */}
       <nav
         aria-label="Ana Bölümler"
         style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}
@@ -223,7 +246,7 @@ export default function HomePage() {
           type="button"
           onClick={() => setActiveTab('baloncuk')}
           className={`touch-btn ${activeTab === 'baloncuk' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: 12.5, padding: '8px 6px' }}
+          style={{ fontSize: 12.5, padding: '8px 4px' }}
         >
           Düşünce Balonu
         </button>
@@ -231,7 +254,7 @@ export default function HomePage() {
           type="button"
           onClick={() => setActiveTab('icyolculuk')}
           className={`touch-btn ${activeTab === 'icyolculuk' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: 12.5, padding: '8px 6px' }}
+          style={{ fontSize: 12.5, padding: '8px 4px' }}
         >
           İç Yolculuk
         </button>
@@ -239,7 +262,7 @@ export default function HomePage() {
           type="button"
           onClick={() => setActiveTab('zikir')}
           className={`touch-btn ${activeTab === 'zikir' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: 12.5, padding: '8px 6px' }}
+          style={{ fontSize: 12.5, padding: '8px 4px' }}
         >
           Zikir &amp; Nefes
         </button>
@@ -247,22 +270,22 @@ export default function HomePage() {
           type="button"
           onClick={() => setActiveTab('irfan')}
           className={`touch-btn ${activeTab === 'irfan' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ fontSize: 12.5, padding: '8px 6px' }}
+          style={{ fontSize: 12.5, padding: '8px 4px' }}
         >
           İrfan Heybesi
         </button>
       </nav>
 
-      {/* TAB 1: DÜŞÜNCE BALONCUKLARI (DERVİŞİN NAZARINDAN GÜNLÜK HAYAT) */}
+      {/* TAB 1: DÜŞÜNCE BALONCUKLARI */}
       {activeTab === 'baloncuk' && (
         <section style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {/* Daily Moments Selector */}
-          <div className="card" style={{ padding: '14px' }}>
+          <div className="card" style={{ padding: '14px 16px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent-gold)', letterSpacing: '0.04em' }}>
-                GÜNLÜK HAYATTA DERVİŞİN 7 TEFEKKÜR ANI
+              <span className="section-label">
+                GÜNLÜK HAYATTA 7 TEFEKKÜR ANI
               </span>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: 12, color: 'var(--p-text-muted)', fontWeight: 500 }}>
                 {sceneIndex + 1} / {DERVISH_THOUGHT_BUBBLES.length}
               </span>
             </div>
@@ -276,7 +299,7 @@ export default function HomePage() {
                   className={`step-slot-btn ${idx === sceneIndex ? 'step-slot-btn-active' : ''}`}
                   style={{ flexDirection: 'column', gap: 2, padding: '6px 0' }}
                 >
-                  <span aria-hidden="true" style={{ fontSize: 16, lineHeight: 1 }}>
+                  <span aria-hidden="true" style={{ fontSize: 15, lineHeight: 1 }}>
                     {item.sceneIcon}
                   </span>
                   <span style={{ fontSize: 11, lineHeight: 1 }}>{idx + 1}</span>
@@ -289,16 +312,16 @@ export default function HomePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div
               style={{
-                background: 'rgba(18, 41, 32, 0.75)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 14,
+                background: 'var(--p-cream-dark)',
+                border: '1px solid var(--p-border)',
+                borderRadius: 10,
                 padding: '10px 14px',
                 fontSize: 13,
-                color: 'var(--text-secondary)',
+                color: 'var(--p-text)',
                 lineHeight: 1.5
               }}
             >
-              <strong style={{ color: 'var(--accent-gold)' }}>
+              <strong style={{ color: 'var(--p-green)' }}>
                 {currentBubble.sceneIcon} {currentBubble.timeOfDay}:
               </strong>{' '}
               {currentBubble.dailyScene}
@@ -312,16 +335,21 @@ export default function HomePage() {
 
             {/* Primary Thought Bubble */}
             <article className="thought-bubble" aria-label="Dervişin Düşünce Baloncuğu">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span className="badge">💭 Dervişin Düşünce Baloncuğu</span>
-                <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>Hâl İdraki</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                <span className="badge">
+                  <span className="badge-dot" />
+                  Dervişin Tefekkürü
+                </span>
+                <span className="section-label">Hâl İdraki</span>
               </div>
 
               <p
+                className="font-serif"
                 style={{
-                  fontSize: 16.5,
-                  fontWeight: 600,
-                  color: 'var(--text-primary)',
+                  fontSize: 17.5,
+                  fontWeight: 500,
+                  fontStyle: 'italic',
+                  color: 'var(--p-text)',
                   lineHeight: 1.6,
                   marginBottom: 14
                 }}
@@ -329,9 +357,9 @@ export default function HomePage() {
                 &ldquo;{currentBubble.dervishThought}&rdquo;
               </p>
 
-              {/* Inner Heart Whisper Bubble */}
+              {/* Inner Heart Whisper: PurelyAdmin Terracotta Soft Box */}
               <div className="whisper-bubble">
-                <strong style={{ color: 'var(--accent-gold)', fontStyle: 'normal', fontSize: 12 }}>
+                <strong style={{ color: 'var(--p-terracotta-dark)', fontStyle: 'normal', fontSize: 12 }}>
                   Kalp Fısıltısı:{' '}
                 </strong>
                 &ldquo;{currentBubble.innerWhisper}&rdquo;
@@ -339,22 +367,25 @@ export default function HomePage() {
             </article>
           </div>
 
-          {/* Digested Sufi Wisdom from PDF */}
+          {/* Digested Sufi Wisdom */}
           <article className="card" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--accent-emerald)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <span className="section-label" style={{ color: 'var(--p-green)' }}>
                 Dervişin Sindirdiği İrfan
               </span>
-              <span style={{ fontSize: 11.5, color: 'var(--text-muted)', textAlign: 'right' }}>
+              <span style={{ fontSize: 11.5, color: 'var(--p-text-muted)', textAlign: 'right' }}>
                 {currentBubble.sourceMaster}
               </span>
             </div>
 
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--accent-gold)' }}>
+            <h2
+              className="font-serif"
+              style={{ fontSize: 18.5, fontWeight: 600, color: 'var(--p-text)' }}
+            >
               {currentBubble.digestedWisdomTitle}
             </h2>
 
-            <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+            <p style={{ fontSize: 13.5, color: 'var(--p-text-muted)', lineHeight: 1.65 }}>
               {currentBubble.digestedWisdomBody}
             </p>
 
@@ -362,40 +393,45 @@ export default function HomePage() {
               style={{
                 marginTop: 4,
                 padding: '12px 14px',
-                background: 'var(--bg-secondary)',
-                borderRadius: 12,
-                border: '1px solid var(--border-subtle)',
-                fontSize: 13.5,
-                color: 'var(--text-primary)',
+                background: 'var(--p-cream-dark)',
+                borderRadius: 8,
+                border: '1px solid var(--p-border)',
+                fontSize: 13,
+                color: 'var(--p-text)',
                 fontWeight: 500,
                 lineHeight: 1.55
               }}
             >
-              ✨ {currentBubble.sacredReference}
+              <span style={{ color: 'var(--p-green)', marginRight: 6 }}>✦</span>
+              {currentBubble.sacredReference}
             </blockquote>
           </article>
 
-          {/* Self-Inquiry & User's Own Inner Journey Prompt */}
+          {/* Self-Inquiry & Inner Journey Prompt */}
           <article
             className="card"
             style={{
               display: 'flex',
               flexDirection: 'column',
               gap: 12,
-              border: '1px solid var(--border-gold)'
+              border: '1px solid var(--p-green-border)'
             }}
           >
-            <span className="badge" style={{ alignSelf: 'flex-start' }}>
-              🪞 Kendi İç Yolculuğuna Soru
+            <span className="badge badge-terracotta" style={{ alignSelf: 'flex-start' }}>
+              <span className="badge-dot badge-dot-terracotta" />
+              Kendi İç Yolculuğuna Soru
             </span>
 
-            <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.6 }}>
+            <p
+              className="font-serif"
+              style={{ fontSize: 16.5, fontWeight: 600, color: 'var(--p-text)', lineHeight: 1.5 }}
+            >
               {currentBubble.selfInquiryQuestion}
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                Tefekkür Tohumları (Dokunarak kendi iç notunuza ekleyebilirsiniz):
+              <span className="section-label">
+                Tefekkür Tohumları (Dokunarak notunuza ekleyebilirsiniz):
               </span>
               {currentBubble.contemplationPrompts.map((prompt, pIdx) => (
                 <button
@@ -407,11 +443,11 @@ export default function HomePage() {
                     justifyContent: 'flex-start',
                     textAlign: 'left',
                     fontSize: 13,
-                    fontWeight: 500,
-                    lineHeight: 1.45
+                    lineHeight: 1.45,
+                    padding: '10px 14px'
                   }}
                 >
-                  <span style={{ color: 'var(--accent-gold)', flexShrink: 0 }}>◈</span>
+                  <span style={{ color: 'var(--p-green)', flexShrink: 0 }}>◈</span>
                   <span>{prompt}</span>
                 </button>
               ))}
@@ -420,7 +456,8 @@ export default function HomePage() {
             <div style={{ marginTop: 4, display: 'flex', flexDirection: 'column', gap: 8 }}>
               <label
                 htmlFor="inner-journey-note"
-                style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--accent-gold)' }}
+                className="section-label"
+                style={{ color: 'var(--p-text)' }}
               >
                 Bu An İçin Kendi İç Muhasebe Notum:
               </label>
@@ -455,7 +492,7 @@ export default function HomePage() {
                 )}
               </div>
               {saveFeedback && (
-                <p style={{ fontSize: 12.5, color: 'var(--accent-emerald)', fontWeight: 600 }}>
+                <p style={{ fontSize: 12.5, color: 'var(--p-green)', fontWeight: 600 }}>
                   ✓ {saveFeedback}
                 </p>
               )}
@@ -486,19 +523,23 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* TAB 2: İÇ YOLCULUK (ETVÂR-I SEB'A & MERÂTİBÜ'L-VÜCÛD & GÖNÜL DEFTERİ) */}
+      {/* TAB 2: İÇ YOLCULUK */}
       {activeTab === 'icyolculuk' && (
         <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* Nefsin Yedi Mertebesi (Etvâr-ı Seb'a) */}
+          {/* Nefsin Yedi Mertebesi */}
           <article className="card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div>
               <span className="badge" style={{ marginBottom: 6 }}>
+                <span className="badge-dot" />
                 Men Arefe Nefsehû Fekad Arefe Rabbehû
               </span>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
+              <h2
+                className="font-serif"
+                style={{ fontSize: 19, fontWeight: 600, color: 'var(--p-text)' }}
+              >
                 Nefsin Yedi Mertebesi (Etvâr-ı Seb&apos;a)
               </h2>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.5 }}>
+              <p style={{ fontSize: 13, color: 'var(--p-text-muted)', marginTop: 4, lineHeight: 1.5 }}>
                 &ldquo;Kendini bilen Rabbini bilir.&rdquo; Şu an kendi iç yolculuğunda hangi nefis durağını tefekkür ediyorsun?
               </p>
             </div>
@@ -522,43 +563,46 @@ export default function HomePage() {
             <div
               style={{
                 padding: 16,
-                background: 'var(--bg-secondary)',
-                borderRadius: 14,
-                border: '1px solid var(--border-gold)',
+                background: 'var(--p-cream-dark)',
+                borderRadius: 10,
+                border: '1px solid var(--p-border)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 8
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent-gold)' }}>
+                <span className="section-label" style={{ color: 'var(--p-green)' }}>
                   {currentNefs.step}. DURAK
                 </span>
-                <span style={{ fontSize: 12, color: 'var(--accent-emerald)' }}>
+                <span style={{ fontSize: 12, color: 'var(--p-terracotta-dark)', fontWeight: 600 }}>
                   {currentNefs.subtitle}
                 </span>
               </div>
-              <h3 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)' }}>
+              <h3
+                className="font-serif"
+                style={{ fontSize: 18, fontWeight: 600, color: 'var(--p-text)' }}
+              >
                 {currentNefs.name}
               </h3>
-              <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.55 }}>
+              <p style={{ fontSize: 13.5, color: 'var(--p-text-muted)', lineHeight: 1.55 }}>
                 {currentNefs.description}
               </p>
               <div
                 style={{
                   marginTop: 4,
                   paddingTop: 10,
-                  borderTop: '1px solid var(--border-subtle)',
+                  borderTop: '1px solid var(--p-border)',
                   fontSize: 13,
-                  color: 'var(--text-secondary)',
+                  color: 'var(--p-text)',
                   lineHeight: 1.5
                 }}
               >
-                <strong style={{ color: 'var(--text-primary)' }}>Günlük Hayattaki İşareti: </strong>
+                <strong style={{ color: 'var(--p-green)' }}>Günlük Hayattaki İşareti: </strong>
                 {currentNefs.dailyLifeSign}
               </div>
               <div className="whisper-bubble" style={{ marginTop: 4 }}>
-                <strong style={{ color: 'var(--accent-gold)', fontStyle: 'normal' }}>
+                <strong style={{ color: 'var(--p-terracotta-dark)', fontStyle: 'normal' }}>
                   Dervişin Notu:{' '}
                 </strong>
                 {currentNefs.dervishAdvice}
@@ -566,16 +610,20 @@ export default function HomePage() {
             </div>
           </article>
 
-          {/* Merâtibü'l-Vücûd (Hazrât-ı Hams / Beş İlahî Mertebe) */}
+          {/* Merâtibü'l-Vücûd */}
           <article className="card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div>
-              <span className="badge" style={{ marginBottom: 6 }}>
+              <span className="badge badge-terracotta" style={{ marginBottom: 6 }}>
+                <span className="badge-dot badge-dot-terracotta" />
                 İbnü&apos;l-Arabî &middot; Hazrât-ı Hams
               </span>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
+              <h2
+                className="font-serif"
+                style={{ fontSize: 19, fontWeight: 600, color: 'var(--p-text)' }}
+              >
                 Merâtibü&apos;l-Vücûd (Beş İlahî Mertebe)
               </h2>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.5 }}>
+              <p style={{ fontSize: 13, color: 'var(--p-text-muted)', marginTop: 4, lineHeight: 1.5 }}>
                 Mutlak gaybdan şehadet âlemine uzanan tecelli silsilesi ve İnsan-ı Kâmil&apos;in cem makamı:
               </p>
             </div>
@@ -586,24 +634,27 @@ export default function HomePage() {
                   key={item.level}
                   style={{
                     padding: 14,
-                    background: 'var(--bg-secondary)',
-                    borderRadius: 12,
-                    border: '1px solid var(--border-subtle)',
+                    background: 'var(--p-surface)',
+                    borderRadius: 8,
+                    border: '1px solid var(--p-border)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 4
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: 14.5, color: 'var(--accent-gold)' }}>
+                    <strong
+                      className="font-serif"
+                      style={{ fontSize: 16, color: 'var(--p-green)' }}
+                    >
                       {item.realm}
                     </strong>
-                    <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>{item.level}</span>
+                    <span className="section-label">{item.level}</span>
                   </div>
-                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: 13, color: 'var(--p-text-muted)', lineHeight: 1.5 }}>
                     {item.description}
                   </p>
-                  <p style={{ fontSize: 12.5, color: 'var(--accent-emerald)', marginTop: 2 }}>
+                  <p style={{ fontSize: 12.5, color: 'var(--p-terracotta-dark)', marginTop: 2, fontWeight: 500 }}>
                     ✦ İdrak: {item.dailyReflection}
                   </p>
                 </div>
@@ -611,20 +662,23 @@ export default function HomePage() {
             </div>
           </article>
 
-          {/* Kullanıcının Kaydettiği Tefekkür Defteri */}
+          {/* Kullanıcının Gönül Defteri */}
           <article className="card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--accent-gold)' }}>
-              Gönül Defterim (Kaydedilen İç Muhasebelerim)
+            <h2
+              className="font-serif"
+              style={{ fontSize: 18.5, fontWeight: 600, color: 'var(--p-text)' }}
+            >
+              Gönül Defterim (Kaydedilen Tefekkür Notlarım)
             </h2>
             {savedReflectionEntries.length === 0 ? (
               <div
                 style={{
-                  padding: 16,
-                  background: 'var(--bg-secondary)',
-                  borderRadius: 12,
-                  border: '1px dashed var(--border-subtle)',
+                  padding: 20,
+                  background: 'var(--p-cream-dark)',
+                  borderRadius: 8,
+                  border: '1px dashed var(--p-border)',
                   textAlign: 'center',
-                  color: 'var(--text-muted)',
+                  color: 'var(--p-text-muted)',
                   fontSize: 13.5,
                   lineHeight: 1.5
                 }}
@@ -638,18 +692,21 @@ export default function HomePage() {
                     key={item.id}
                     style={{
                       padding: 14,
-                      background: 'var(--bg-secondary)',
-                      borderRadius: 12,
-                      border: '1px solid var(--border-subtle)',
+                      background: 'var(--p-cream-dark)',
+                      borderRadius: 8,
+                      border: '1px solid var(--p-border)',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: 6
                     }}
                   >
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent-gold)' }}>
+                    <span className="section-label" style={{ color: 'var(--p-green)' }}>
                       {item.sceneIcon} {item.timeOfDay}
                     </span>
-                    <p style={{ fontSize: 13.5, color: 'var(--text-primary)', lineHeight: 1.55 }}>
+                    <p
+                      className="font-serif"
+                      style={{ fontSize: 14.5, fontStyle: 'italic', color: 'var(--p-text)', lineHeight: 1.55 }}
+                    >
                       &ldquo;{reflections[item.id]}&rdquo;
                     </p>
                   </div>
@@ -660,25 +717,32 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* TAB 3: ZİKİR & NEFES (HALK-I CEDÎD VE ZİKİR MECLİSİ) */}
+      {/* TAB 3: ZİKİR & NEFES */}
       {activeTab === 'zikir' && (
         <section style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* Dervish Thought Bubble for Breath & Dhikr */}
+          {/* Dhikr Thought Bubble */}
           <article className="thought-bubble">
-            <span className="badge" style={{ marginBottom: 8 }}>
-              💭 Dervişin Zikir Tefekkürü
-            </span>
-            <p style={{ fontSize: 14.5, color: 'var(--text-primary)', lineHeight: 1.6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <span className="badge">
+                <span className="badge-dot" />
+                Zikir Tefekkürü
+              </span>
+              <span className="section-label">Halk-ı Cedîd</span>
+            </div>
+            <p
+              className="font-serif"
+              style={{ fontSize: 15.5, fontStyle: 'italic', color: 'var(--p-text)', lineHeight: 1.6 }}
+            >
               &ldquo;{currentDhikr.dervishSecret}&rdquo;
             </p>
-            <p style={{ fontSize: 12, color: 'var(--accent-gold)', marginTop: 8 }}>
+            <p style={{ fontSize: 12, color: 'var(--p-text-muted)', marginTop: 8, fontWeight: 500 }}>
               — {currentDhikr.sourceNote}
             </p>
           </article>
 
           {/* Dhikr Selector */}
-          <div className="card" style={{ padding: 14 }}>
-            <span style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--accent-gold)', marginBottom: 8 }}>
+          <div className="card" style={{ padding: '14px 16px' }}>
+            <span className="section-label" style={{ display: 'block', marginBottom: 10 }}>
               ZİKİR VİRDİNİ SEÇİN
             </span>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -706,20 +770,23 @@ export default function HomePage() {
             <div>
               <p
                 style={{
-                  fontSize: 26,
+                  fontSize: 28,
                   direction: 'rtl',
                   fontFamily: 'Traditional Arabic, serif',
-                  color: 'var(--accent-gold)',
-                  marginBottom: 4
+                  color: 'var(--p-green)',
+                  marginBottom: 6
                 }}
               >
                 {currentDhikr.arabic}
               </p>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>
+              <h2
+                className="font-serif"
+                style={{ fontSize: 21, fontWeight: 600, color: 'var(--p-text)' }}
+              >
                 {currentDhikr.title}
               </h2>
-              <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', marginTop: 4 }}>
-                Her nefeste &ldquo;Halk-ı Cedîd&rdquo; (yeni yaratılış) idrakiyle kalbini cilala
+              <p style={{ fontSize: 12.5, color: 'var(--p-text-muted)', marginTop: 4 }}>
+                Her nefeste &ldquo;Halk-ı Cedîd&rdquo; (yeni yaratılış) idrakiyle kalbini arındır
               </p>
             </div>
 
@@ -732,21 +799,28 @@ export default function HomePage() {
                 height: 176,
                 margin: '0 auto',
                 borderRadius: '50%',
-                background: 'radial-gradient(circle, #1a3c2f 0%, #0d1f18 100%)',
-                border: '3px solid var(--accent-gold)',
-                boxShadow: '0 0 28px rgba(226, 190, 90, 0.25)',
+                background: 'var(--p-surface)',
+                border: '3px solid var(--p-green)',
+                boxShadow: '0 6px 24px rgba(59, 109, 17, 0.12)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                userSelect: 'none'
+                userSelect: 'none',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease'
               }}
             >
-              <span style={{ fontSize: 44, fontWeight: 800, color: 'var(--text-primary)' }}>
+              <span
+                className="font-serif"
+                style={{ fontSize: 46, fontWeight: 700, color: 'var(--p-text)', lineHeight: 1 }}
+              >
                 {dhikrCount}
               </span>
-              <span style={{ fontSize: 12, color: 'var(--accent-gold)', marginTop: 4, fontWeight: 600 }}>
+              <span
+                className="section-label"
+                style={{ color: 'var(--p-green)', marginTop: 6, fontWeight: 700 }}
+              >
                 KALP İLE DOKUN
               </span>
             </button>
@@ -773,18 +847,22 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* TAB 4: İRFAN HEYBESİ (10 TASAVVUF FASLI) */}
+      {/* TAB 4: İRFAN HEYBESİ */}
       {activeTab === 'irfan' && (
         <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <article className="card">
             <span className="badge" style={{ marginBottom: 6 }}>
-              Vahdet-i Vücûd, Ene&apos;l-Hak ve Varlık Sırrı
+              <span className="badge-dot" />
+              Vahdet-i Vücûd &middot; Hakikat Risalesi
             </span>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-primary)' }}>
+            <h2
+              className="font-serif"
+              style={{ fontSize: 19, fontWeight: 600, color: 'var(--p-text)' }}
+            >
               Dervişin İrfan Heybesi (10 Hakikat Faslı)
             </h2>
-            <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.5 }}>
-              Dervişin hayata bakış açısını şekillendiren ve sindirdiği tasavvuf risalesinin temel fasılları:
+            <p style={{ fontSize: 13, color: 'var(--p-text-muted)', marginTop: 4, lineHeight: 1.5 }}>
+              Dervişin hayata bakışını şekillendiren ve sindirdiği tasavvuf risalesinin temel fasılları:
             </p>
           </article>
 
@@ -799,12 +877,14 @@ export default function HomePage() {
               >
                 <summary className="disclosure-summary">
                   <span style={{ minWidth: 0, flex: 1 }}>
-                    <strong style={{ color: 'var(--accent-gold)', marginRight: 6 }}>
+                    <strong style={{ color: 'var(--p-green)', marginRight: 6 }}>
                       {ch.number}.
                     </strong>
-                    {ch.title}
+                    <span className="font-serif" style={{ fontSize: 16, fontWeight: 600 }}>
+                      {ch.title}
+                    </span>
                   </span>
-                  <span style={{ color: 'var(--accent-gold)', fontSize: 12, flexShrink: 0 }}>
+                  <span className="section-label" style={{ color: 'var(--p-green)', flexShrink: 0 }}>
                     OKU ▾
                   </span>
                 </summary>
@@ -814,24 +894,24 @@ export default function HomePage() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 10,
-                    borderTop: '1px solid var(--border-subtle)'
+                    borderTop: '1px solid var(--p-border)'
                   }}
                 >
                   <span
                     style={{
                       fontSize: 12,
-                      color: 'var(--accent-emerald)',
+                      color: 'var(--p-terracotta-dark)',
                       fontWeight: 600,
                       marginTop: 10
                     }}
                   >
                     {ch.subtitle}
                   </span>
-                  <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                  <p style={{ fontSize: 13.5, color: 'var(--p-text-muted)', lineHeight: 1.6 }}>
                     {ch.summary}
                   </p>
                   <div className="whisper-bubble">
-                    <strong style={{ color: 'var(--accent-gold)', fontStyle: 'normal' }}>
+                    <strong style={{ color: 'var(--p-terracotta-dark)', fontStyle: 'normal' }}>
                       Dervişin İdraki:{' '}
                     </strong>
                     {ch.dervishNote}
@@ -839,14 +919,15 @@ export default function HomePage() {
                   <blockquote
                     style={{
                       padding: '10px 12px',
-                      background: 'var(--bg-secondary)',
-                      borderRadius: 10,
+                      background: 'var(--p-cream-dark)',
+                      borderRadius: 8,
                       fontSize: 12.5,
-                      color: 'var(--text-primary)',
-                      border: '1px solid var(--border-subtle)'
+                      color: 'var(--p-text)',
+                      border: '1px solid var(--p-border)'
                     }}
                   >
-                    ✦ {ch.keyQuote}
+                    <span style={{ color: 'var(--p-green)', marginRight: 6 }}>✦</span>
+                    {ch.keyQuote}
                   </blockquote>
                 </div>
               </details>
@@ -856,8 +937,11 @@ export default function HomePage() {
       )}
 
       {/* Footer */}
-      <footer style={{ marginTop: 'auto', textAlign: 'center', padding: '10px 0' }}>
-        <p style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>
+      <footer style={{ marginTop: 'auto', textAlign: 'center', padding: '16px 0 10px 0' }}>
+        <p
+          className="font-serif"
+          style={{ fontSize: 13, fontStyle: 'italic', color: 'var(--p-text-muted)', lineHeight: 1.4 }}
+        >
           Kalb-i Selim &middot; &ldquo;Nereye dönerseniz dönünüz, Allah&apos;ın vechi oradadır&rdquo; (el-Bakara, 2/115)
         </p>
       </footer>
