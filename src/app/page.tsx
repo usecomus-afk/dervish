@@ -64,6 +64,7 @@ export default function HomePage() {
   const [dhikrCount, setDhikrCount] = useState<number>(0);
   const [reflections, setReflections] = useState<Record<string, string>>({});
   const [draftNote, setDraftNote] = useState<string>('');
+  const [isSaved, setIsSaved] = useState<boolean>(false);
   const [saveFeedback, setSaveFeedback] = useState<string>('');
 
   const currentBubble = DERVISH_THOUGHT_BUBBLES[sceneIndex] || DERVISH_THOUGHT_BUBBLES[0];
@@ -86,7 +87,9 @@ export default function HomePage() {
       if (savedNotes) {
         const parsedNotes = JSON.parse(savedNotes) as Record<string, string>;
         setReflections(parsedNotes);
-        setDraftNote(parsedNotes[DERVISH_THOUGHT_BUBBLES[0].id] || '');
+        const initialNote = parsedNotes[DERVISH_THOUGHT_BUBBLES[0].id] || '';
+        setDraftNote(initialNote);
+        setIsSaved(Boolean(initialNote));
       }
     } catch {
       // Ignore storage access errors in restricted webviews
@@ -97,28 +100,37 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!mounted) return;
-    setDraftNote(reflections[currentBubble.id] || '');
+    const existing = reflections[currentBubble.id] || '';
+    setDraftNote(existing);
+    setIsSaved(Boolean(existing));
     setSaveFeedback('');
   }, [sceneIndex, currentBubble.id, mounted, reflections]);
 
   const handleSaveReflection = (customText?: string) => {
-    const textToSave = (customText !== undefined ? customText : draftNote).trim();
+    const isClearing = customText === '';
+    const rawText = customText !== undefined ? customText : draftNote;
+    const textToSave = rawText.trim();
     const updated = { ...reflections };
-    if (textToSave) {
-      updated[currentBubble.id] = textToSave;
-    } else {
+    if (isClearing) {
       delete updated[currentBubble.id];
+      setDraftNote('');
+      setIsSaved(false);
+      setSaveFeedback('');
+    } else {
+      updated[currentBubble.id] = textToSave || currentBubble.contemplationPrompts[0];
+      if (!textToSave) {
+        setDraftNote(currentBubble.contemplationPrompts[0]);
+      } else if (customText !== undefined) {
+        setDraftNote(textToSave);
+      }
+      setIsSaved(true);
+      setSaveFeedback('Kaydedildi');
     }
     setReflections(updated);
-    if (customText !== undefined) {
-      setDraftNote(textToSave);
-    }
     try {
       localStorage.setItem('kalbiselim_reflections_v1', JSON.stringify(updated));
-      setSaveFeedback('Tefekkür notunuz gönül defterine kaydedildi.');
-      setTimeout(() => setSaveFeedback(''), 2500);
     } catch {
-      setSaveFeedback('Not kaydedilirken bir sorun oluştu.');
+      setSaveFeedback('Kayıt hatası');
     }
   };
 
@@ -255,16 +267,20 @@ export default function HomePage() {
                 {sceneIndex + 1} / {DERVISH_THOUGHT_BUBBLES.length}
               </span>
             </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            <div className="step-grid-7">
               {DERVISH_THOUGHT_BUBBLES.map((item, idx) => (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => setSceneIndex(idx)}
-                  className={`scene-pill ${idx === sceneIndex ? 'scene-pill-active' : ''}`}
+                  aria-label={`${idx + 1}. Tefekkür Anı`}
+                  className={`step-slot-btn ${idx === sceneIndex ? 'step-slot-btn-active' : ''}`}
+                  style={{ flexDirection: 'column', gap: 2, padding: '6px 0' }}
                 >
-                  <span aria-hidden="true">{item.sceneIcon}</span>
-                  <span>{item.timeOfDay.split('·')[0].trim()}</span>
+                  <span aria-hidden="true" style={{ fontSize: 16, lineHeight: 1 }}>
+                    {item.sceneIcon}
+                  </span>
+                  <span style={{ fontSize: 11, lineHeight: 1 }}>{idx + 1}</span>
                 </button>
               ))}
             </div>
@@ -414,7 +430,11 @@ export default function HomePage() {
                 className="textarea-input"
                 placeholder="Dervişin bu düşüncesi senin kalbinde neyi uyandırdı? Buraya iç sesini yaz..."
                 value={draftNote}
-                onChange={(e) => setDraftNote(e.target.value)}
+                onChange={(e) => {
+                  setDraftNote(e.target.value);
+                  setIsSaved(false);
+                  setSaveFeedback('');
+                }}
               />
               <div style={{ display: 'flex', gap: 8 }}>
                 <button
@@ -423,7 +443,7 @@ export default function HomePage() {
                   className="touch-btn btn-primary"
                   style={{ flex: 1 }}
                 >
-                  Gönül Defterine Kaydet
+                  {isSaved ? '✓ Kaydedildi' : 'Gönül Defterine Kaydet'}
                 </button>
                 {reflections[currentBubble.id] && (
                   <button
@@ -484,16 +504,15 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
+            <div className="step-grid-7">
               {NEFS_STATIONS.map((station) => (
                 <button
                   key={station.step}
                   type="button"
                   onClick={() => handleSelectNefs(station.step)}
-                  className={`touch-btn ${
-                    selectedNefsStep === station.step ? 'btn-primary' : 'btn-secondary'
+                  className={`step-slot-btn ${
+                    selectedNefsStep === station.step ? 'step-slot-btn-active' : ''
                   }`}
-                  style={{ padding: '8px 0', fontSize: 14 }}
                   aria-label={`${station.step}. Mertebe: ${station.name}`}
                 >
                   {station.step}

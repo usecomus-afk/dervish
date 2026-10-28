@@ -108,8 +108,8 @@ body {
 }
 
 .touch-btn {
-  min-height: 46px;
-  min-width: 46px;
+  min-height: 44px;
+  min-width: 0;
   padding: 10px 14px;
   border-radius: 12px;
   border: none;
@@ -123,6 +123,39 @@ body {
   transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.15s ease;
   user-select: none;
   text-align: center;
+}
+
+.step-grid-7 {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+}
+
+.step-slot-btn {
+  min-height: 44px;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.step-slot-btn-active {
+  background: linear-gradient(135deg, #e2be5a, #b88917);
+  border-color: var(--accent-gold);
+  color: #07120e;
+  box-shadow: 0 0 12px rgba(226, 190, 90, 0.3);
 }
 
 .touch-btn:active {
