@@ -6,8 +6,7 @@ import {
   DERVISH_THOUGHT_BUBBLES,
   NEFS_STATIONS,
   DIVINE_PRESENCES,
-  TREATISE_CHAPTERS,
-  SUFI_MASTERS_SOURCES
+  TREATISE_CHAPTERS
 } from '../data/dervishWisdom';
 
 type TabKey = 'baloncuk' | 'icyolculuk' | 'zikir' | 'irfan';
@@ -774,7 +773,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* TAB 4: İRFAN HEYBESİ (10 TASAVVUF FASLI & BÜYÜK MUTASAVVIFLARIN ESERLERİ) */}
+      {/* TAB 4: İRFAN HEYBESİ (10 TASAVVUF FASLI) */}
       {activeTab === 'irfan' && (
         <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <article className="card">
@@ -853,54 +852,6 @@ export default function HomePage() {
               </details>
             ))}
           </div>
-
-          {/* 11. Bölüm: Kaynakça ve Büyük Mutasavvıfların Eserleri */}
-          <article className="card" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <div>
-              <span className="badge" style={{ marginBottom: 6 }}>
-                XI. Bölüm &middot; İrfan Menbaları
-              </span>
-              <h2 style={{ fontSize: 17, fontWeight: 700, color: 'var(--text-primary)' }}>
-                Büyük Mutasavvıflar ve Başlıca Şaheserleri
-              </h2>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {SUFI_MASTERS_SOURCES.map((source) => (
-                <div
-                  key={source.master}
-                  style={{
-                    padding: 14,
-                    background: 'var(--bg-secondary)',
-                    borderRadius: 12,
-                    border: '1px solid var(--border-subtle)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 6
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                    <strong style={{ fontSize: 14, color: 'var(--accent-gold)' }}>
-                      {source.master}
-                    </strong>
-                    <span style={{ fontSize: 11.5, color: 'var(--text-muted)', flexShrink: 0 }}>
-                      {source.era}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {source.works.map((w) => (
-                      <span key={w} className="badge" style={{ fontSize: 11 }}>
-                        📖 {w}
-                      </span>
-                    ))}
-                  </div>
-                  <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                    {source.coreTeaching}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </article>
         </section>
       )}
 
