@@ -1,0 +1,68 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new build of Kalb-i Selim (dervish) to TestFlight"
+  lane :beta do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPSTORE_KEY_ID"],
+      issuer_id: ENV["APPSTORE_ISSUER_ID"],
+      key_content: ENV["APPSTORE_P8_KEY"],
+      is_key_content_base64: false,
+      in_house: false
+    )
+
+    setup_ci
+
+    bundle_id = "com.kalbiselim.dervis"
+    team_id = "R8LQC6KZG8"
+
+    match(
+      type: "appstore",
+      readonly: false,
+      git_url: "git@github.com:usecomus-afk/purelyistanbul-certs.git",
+      app_identifier: bundle_id,
+      username: "fastlane"
+    )
+
+    update_app_identifier(
+      xcodeproj: "ios/App/App.xcodeproj",
+      plist_path: "App/Info.plist",
+      app_identifier: bundle_id
+    )
+
+    update_project_team(
+      path: "ios/App/App.xcodeproj",
+      teamid: team_id
+    )
+
+    profile_path = ENV["sigh_#{bundle_id}_appstore_profile-path"]
+    if profile_path
+      update_project_provisioning(
+        xcodeproj: "ios/App/App.xcodeproj",
+        profile: profile_path,
+        build_configuration: "Release"
+      )
+    end
+
+    increment_build_number(
+      build_number: ENV["GITHUB_RUN_NUMBER"] || Time.now.strftime("%Y%m%d%H%M"),
+      xcodeproj: "ios/App/App.xcodeproj"
+    )
+
+    build_app(
+      project: "ios/App/App.xcodeproj",
+      scheme: "App",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "KalbiSelim.ipa",
+      xcargs: "DEVELOPMENT_TEAM=#{team_id} CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=\"Apple Distribution\""
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      ipa: "./build/KalbiSelim.ipa",
+      app_identifier: bundle_id,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
