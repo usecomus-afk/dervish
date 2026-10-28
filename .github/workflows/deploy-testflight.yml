@@ -3,10 +3,17 @@ name: Deploy Kalb-i Selim to TestFlight
 on:
   workflow_dispatch:
     inputs:
-      match_password:
-        description: "Password for certificates repo (purelyistanbul-certs)"
+      bundle_id:
+        description: "App Store Connect Bundle ID (Varsayılan: com.kalbiselim.dervis)"
         required: false
-        type: string
+        default: "com.kalbiselim.dervis"
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: kalbiselim-testflight-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -32,26 +39,20 @@ jobs:
       - name: Install Node Dependencies
         run: npm install
 
-      - name: Build Web Application
-        run: npm run build
-
-      - name: Add & Sync Capacitor iOS
+      - name: Build Web Application & Sync Capacitor iOS
         run: |
-          if [ ! -d "ios" ]; then
-            npx cap add ios
-          fi
+          npm run build
+          [ -d ios/App/App.xcodeproj ] || (npx cap add ios --packagemanager SPM || true)
           npx cap sync ios
+
+      - name: Generate 1024x1024 AppIcon, Patch Info.plist & PrivacyInfo.xcprivacy
+        run: node scripts/patch-ios.cjs
 
       - name: Set up Ruby & Bundler
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2"
+          ruby-version: "3.3"
           bundler-cache: true
-
-      - name: Setup SSH for Match Certificates Repo
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.MATCH_DEPLOY_KEY }}
 
       - name: Deploy to TestFlight via Fastlane
         run: bundle exec fastlane beta
@@ -59,13 +60,18 @@ jobs:
           APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
           APPSTORE_P8_KEY: ${{ secrets.APPSTORE_P8_KEY }}
-          MATCH_PASSWORD: ${{ inputs.match_password || secrets.MATCH_PASSWORD }}
+          IOS_DIST_CERT_PEM: ${{ secrets.IOS_DIST_CERT_PEM }}
+          IOS_DIST_KEY_PEM: ${{ secrets.IOS_DIST_KEY_PEM }}
+          IOS_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE_BASE64 }}
+          IOS_BUNDLE_ID: ${{ inputs.bundle_id || 'com.kalbiselim.dervis' }}
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
+          FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 8
 
       - name: Upload Signed KalbiSelim.ipa Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: KalbiSelim-Signed-IPA
+          name: KalbiSelim-Signed-IPA-${{ github.run_number }}
           path: build/KalbiSelim.ipa
           retention-days: 14

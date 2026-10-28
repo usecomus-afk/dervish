@@ -1,7 +1,7 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new build of Kalb-i Selim (dervish) to TestFlight"
+  desc "Build signed Kalb-i Selim (dervish) iOS IPA and upload to Apple TestFlight"
   lane :beta do
     api_key = app_store_connect_api_key(
       key_id: ENV["APPSTORE_KEY_ID"],
@@ -13,16 +13,55 @@ platform :ios do
 
     setup_ci
 
-    bundle_id = "com.kalbiselim.dervis"
-    team_id = "R8LQC6KZG8"
+    bundle_id = ENV["IOS_BUNDLE_ID"].to_s.strip
+    bundle_id = "com.kalbiselim.dervis" if bundle_id.empty?
 
-    match(
-      type: "appstore",
-      readonly: false,
-      git_url: "git@github.com:usecomus-afk/purelyistanbul-certs.git",
-      app_identifier: bundle_id,
-      username: "fastlane"
-    )
+    existing = Spaceship::ConnectAPI::BundleId.find(bundle_id)
+    if existing.nil?
+      UI.message("Registering Bundle ID #{bundle_id} in Apple Developer Portal...")
+      Spaceship::ConnectAPI::BundleId.create(
+        name: "Kalb-i Selim Dervish",
+        platform: "IOS",
+        identifier: bundle_id
+      )
+    else
+      UI.message("Bundle ID #{bundle_id} is registered (#{existing.id})")
+    end
+
+    # Import Distribution Certificate into CI keychain
+    cert_pem = ENV["IOS_DIST_CERT_PEM"].to_s
+    key_pem = ENV["IOS_DIST_KEY_PEM"].to_s
+    if !cert_pem.empty? && !key_pem.empty?
+      File.write("/tmp/kalbiselim_dist.pem", cert_pem)
+      File.write("/tmp/kalbiselim_dist.key", key_pem)
+      # Export legacy 3DES PKCS12 compatible with macOS Keychain
+      sh("openssl pkcs12 -export -legacy -out /tmp/kalbiselim_dist.p12 -inkey /tmp/kalbiselim_dist.key -in /tmp/kalbiselim_dist.pem -passout pass:KalbiSelim2026! || /usr/bin/openssl pkcs12 -export -out /tmp/kalbiselim_dist.p12 -inkey /tmp/kalbiselim_dist.key -in /tmp/kalbiselim_dist.pem -passout pass:KalbiSelim2026!")
+      import_certificate(
+        certificate_path: "/tmp/kalbiselim_dist.p12",
+        certificate_password: "KalbiSelim2026!",
+        keychain_name: ENV["MATCH_KEYCHAIN_NAME"] || "fastlane_tmp_keychain",
+        keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || ""
+      )
+    end
+
+    # Install or fetch App Store Provisioning Profile
+    profile_path = nil
+    prof_b64 = ENV["IOS_PROVISION_PROFILE_BASE64"].to_s.strip
+    if !prof_b64.empty? && bundle_id == "com.kalbiselim.dervis"
+      require "base64"
+      File.binwrite("/tmp/KalbiSelim_AppStore.mobileprovision", Base64.decode64(prof_b64))
+      profile_path = FastlaneCore::ProvisioningProfile.install("/tmp/KalbiSelim_AppStore.mobileprovision")
+      UI.success("Installed Kalb-i Selim AppStore Provisioning Profile: #{profile_path}")
+    else
+      sigh(
+        api_key: api_key,
+        app_identifier: bundle_id,
+        cert_id: "R5H828L3RS",
+        provisioning_name: "KalbiSelim AppStore Profile #{bundle_id}",
+        filename: "/tmp/KalbiSelim_Dynamic.mobileprovision"
+      )
+      profile_path = ENV["SIGH_PROFILE_PATH"] || "/tmp/KalbiSelim_Dynamic.mobileprovision"
+    end
 
     update_app_identifier(
       xcodeproj: "ios/App/App.xcodeproj",
@@ -32,22 +71,22 @@ platform :ios do
 
     update_project_team(
       path: "ios/App/App.xcodeproj",
-      teamid: team_id
+      teamid: "R8LQC6KZG8"
     )
 
-    profile_path = ENV["sigh_#{bundle_id}_appstore_profile-path"]
-    if profile_path
-      update_project_provisioning(
-        xcodeproj: "ios/App/App.xcodeproj",
-        profile: profile_path,
-        build_configuration: "Release"
-      )
-    end
+    update_project_provisioning(
+      xcodeproj: "ios/App/App.xcodeproj",
+      profile: profile_path,
+      build_configuration: "Release"
+    )
 
     increment_build_number(
       build_number: ENV["GITHUB_RUN_NUMBER"] || Time.now.strftime("%Y%m%d%H%M"),
       xcodeproj: "ios/App/App.xcodeproj"
     )
+
+    profile_uuid = FastlaneCore::ProvisioningProfile.uuid(profile_path)
+    UI.message("Using Provisioning Profile UUID: #{profile_uuid} for #{bundle_id}")
 
     build_app(
       project: "ios/App/App.xcodeproj",
@@ -55,14 +94,34 @@ platform :ios do
       export_method: "app-store",
       output_directory: "./build",
       output_name: "KalbiSelim.ipa",
-      xcargs: "DEVELOPMENT_TEAM=#{team_id} CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=\"Apple Distribution\""
+      export_options: {
+        signingStyle: "manual",
+        teamID: "R8LQC6KZG8",
+        signingCertificate: "iPhone Distribution",
+        provisioningProfiles: {
+          bundle_id => profile_uuid
+        }
+      },
+      xcargs: "DEVELOPMENT_TEAM=R8LQC6KZG8 CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=\"iPhone Distribution\" PROVISIONING_PROFILE_SPECIFIER=\"#{profile_uuid}\""
     )
 
-    upload_to_testflight(
-      api_key: api_key,
-      ipa: "./build/KalbiSelim.ipa",
-      app_identifier: bundle_id,
-      skip_waiting_for_build_processing: true
-    )
+    app_record = Spaceship::ConnectAPI::App.find(bundle_id)
+    if app_record
+      UI.success("Found App Store Connect App record for #{bundle_id} (#{app_record.id}). Uploading to TestFlight...")
+      upload_to_testflight(
+        api_key: api_key,
+        ipa: "./build/KalbiSelim.ipa",
+        changelog: "Kalb-i Selim (dervish) iOS sürümü güncellendi.",
+        skip_waiting_for_build_processing: true
+      )
+    else
+      UI.important("App Store Connect record not found for #{bundle_id}, attempting direct upload...")
+      upload_to_testflight(
+        api_key: api_key,
+        ipa: "./build/KalbiSelim.ipa",
+        app_identifier: bundle_id,
+        skip_waiting_for_build_processing: true
+      )
+    end
   end
 end
