@@ -1,0 +1,15 @@
+{
+  "appId": "com.kalbiselim.dervis",
+  "appName": "Kalb-i Selim",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": true,
+    "allowsLinkPreview": false,
+    "preferredContentMode": "mobile"
+  }
+}
